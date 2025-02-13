@@ -7,11 +7,12 @@ interface InvestigationStep {
   findings: string
 }
 
-export interface BugReport {
+export interface Bug {
   id: string
   title: string
   description: string
   stepsToReproduce: string
+  status: string
   investigationSteps: InvestigationStep[]
   resolution: string
   createdAt: string
@@ -19,7 +20,7 @@ export interface BugReport {
 }
 
 export const useBugStore = defineStore('bugs', () => {
-  const bugs = ref<BugReport[]>([])
+  const bugs = ref<Bug[]>([])
 
   // Load initial data from localStorage
   const initializeStore = () => {
@@ -41,9 +42,9 @@ export const useBugStore = defineStore('bugs', () => {
   )
 
   // Store actions
-  const addBug = (bug: Omit<BugReport, 'id' | 'createdAt' | 'updatedAt'>) => {
+  const addBug = (bug: Omit<Bug, 'id' | 'createdAt' | 'updatedAt'>) => {
     console.log('Adding new bug:', bug)
-    const newBug: BugReport = {
+    const newBug: Bug = {
       ...bug,
       id: crypto.randomUUID(),
       createdAt: new Date().toISOString(),
@@ -52,7 +53,7 @@ export const useBugStore = defineStore('bugs', () => {
     bugs.value.push(newBug)
   }
 
-  const updateBug = (id: string, updates: Partial<BugReport>) => {
+  const updateBug = (id: string, updates: Partial<Bug>) => {
     const index = bugs.value.findIndex((bug) => bug.id === id)
     if (index !== -1) {
       bugs.value[index] = {

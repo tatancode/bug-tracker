@@ -42,6 +42,7 @@ const saveBug = () => {
     stepsToReproduce: stepsToReproduce.value,
     investigationSteps: investigationSteps.value,
     resolution: resolution.value,
+    status: 'new',
   })
 
   // Clear form
@@ -64,14 +65,6 @@ onMounted(() => {
 <template>
   <div class="bug-investigation">
     <h1>Bug Investigation Tool</h1>
-
-    <div class="section" v-if="savedBugs.length > 0">
-      <h2>Saved Bug Reports</h2>
-      <div v-for="bug in savedBugs" :key="bug.id" class="saved-bug">
-        <h3>{{ bug.title }}</h3>
-        <p>Created: {{ new Date(bug.createdAt).toLocaleString() }}</p>
-      </div>
-    </div>
 
     <div class="section">
       <h2>Bug Details</h2>

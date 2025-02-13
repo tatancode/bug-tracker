@@ -3,21 +3,7 @@ import { ref, onMounted } from 'vue'
 import { useBugStore } from '@/stores/bugStore'
 import BugReport from './BugReport.vue'
 import BugForm from './BugForm.vue'
-
-interface Bug {
-  id: string
-  title: string
-  description: string
-  stepsToReproduce: string
-  investigationSteps: {
-    timestamp: string
-    description: string
-    findings: string
-  }[]
-  resolution: string
-  createdAt: string
-  updatedAt: string
-}
+import type { Bug } from '@/stores/bugStore'
 
 const store = useBugStore()
 const savedBugs = ref<Bug[]>(store.bugs)
@@ -35,6 +21,12 @@ function handleCreateBugClick() {
   selectedBug.value = null
   showCreateButton.value = false
   console.log('Clicking Create!!')
+}
+
+function handleBugDeleted() {
+  savedBugs.value = store.bugs
+  selectedBug.value = null
+  showCreateButton.value = true
 }
 
 onMounted(() => {
@@ -64,11 +56,18 @@ onMounted(() => {
     </div>
 
     <div v-if="!showBugForm" class="bug-details">
-      <BugReport :bug="selectedBug" />
+      <BugReport :bug="selectedBug" @bug-deleted="handleBugDeleted" />
     </div>
 
     <div v-else class="bug-form">
-      <BugForm @bug-saved="showBugForm = false" />
+      <BugForm
+        @bug-saved="
+          () => {
+            showBugForm = false
+            showCreateButton = true
+          }
+        "
+      />
     </div>
 
     <div v-if="showCreateButton" class="section" id="create-bug">
