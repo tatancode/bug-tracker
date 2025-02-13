@@ -3,7 +3,21 @@ import { ref, onMounted } from 'vue'
 import { useBugStore } from '@/stores/bugStore'
 import BugReport from './BugReport.vue'
 import BugForm from './BugForm.vue'
-import type { Bug } from '@/stores/bugStore'
+
+interface Bug {
+  id: string
+  title: string
+  description: string
+  stepsToReproduce: string
+  investigationSteps: {
+    timestamp: string
+    description: string
+    findings: string
+  }[]
+  resolution: string
+  createdAt: string
+  updatedAt: string
+}
 
 const store = useBugStore()
 const savedBugs = ref<Bug[]>(store.bugs)
